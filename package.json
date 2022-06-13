@@ -1,0 +1,28 @@
+{
+  "name": "buffer-descriptors",
+  "version": "1.0.0",
+  "description": "Describe the format of a buffer an parse buffer into that format",
+  "keywords": [
+    "buffer",
+    "binary"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/roman-balzer/buffer-descriptors.git"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "Roman Balzer <roman.balzer@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/roman-balzer/buffer-descriptors/issues"
+  },
+  "homepage": "https://github.com/roman-balzer/buffer-descriptors#readme",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.42",
+    "typescript": "^4.7.3"
+  }
+}
