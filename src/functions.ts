@@ -17,6 +17,7 @@ function checkForDependency<T, K extends keyof T>(usedBuffers: T, dependency: K,
  * @returns [transformedContent , tail , currentPos]
  */
 export function parseBuffer<T>(buffer: Buffer, format: BufferDescriptor<T>): [T, Buffer, number] {
+  console.log(`🚀TCL ~ file: functions.ts ~ line 137 ~ format`, format)
   let prevChunksRaw = {} as { [key in keyof T]: Buffer }
   let prevChunksTransformed = {} as { [key in keyof T]: any }
   let currentPos = 0
@@ -44,6 +45,7 @@ export function parseBuffer<T>(buffer: Buffer, format: BufferDescriptor<T>): [T,
               : dsc.length.transform(prevChunksRaw[dsc.length.valueFrom])
 
           const bufferToUse = buffer.slice(currentPos, currentPos + bufferLength)
+          console.log(`🚀TCL ~ file: functions.ts ~ line 47 ~ bufferToUse`, bufferToUse)
           currentPos += bufferToUse.length
           if (bufferToUse.length > 0) {
             prevChunksRaw[dsc.name] = bufferToUse
@@ -90,6 +92,7 @@ export function parseBuffer<T>(buffer: Buffer, format: BufferDescriptor<T>): [T,
 
           let currPosInArrayBuffer = currentPos
           let bufferToUse = buffer.slice(currPosInArrayBuffer, buffer.length)
+          console.log(`🚀TCL ~ file: functions.ts ~ line 93 ~ bufferToUse`, bufferToUse)
           let elementInArray = []
           for (let i = 0; i < iterations; i++) {
             const [innerTransformedValues, bufferTail, endPos] = parseBuffer(bufferToUse, dsc.arrayFormat)
@@ -129,6 +132,7 @@ export function parseBuffer<T>(buffer: Buffer, format: BufferDescriptor<T>): [T,
     throw e
   }
   const bufferTail = buffer.slice(currentPos, buffer.length)
+  console.log(`🚀TCL ~ file: functions.ts ~ line 134 ~ prevChunksTransformed`, prevChunksTransformed)
   return [prevChunksTransformed, bufferTail, currentPos]
 }
 

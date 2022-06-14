@@ -1,4 +1,4 @@
-import { BufferDescriptor, ArrayChunk, SubDescriptorChunk } from '../descriptor-types'
+import { BufferDescriptor, ArrayChunk, SubDescriptorChunk, ChunkDescriptor } from '../descriptor-types'
 import * as convertBuffer from '../converter'
 import { DescribeNumber } from './NumberDescriptor'
 import { recursivlyTransformBuffer } from '../functions'
@@ -63,6 +63,32 @@ export function describeArraySubChunk<Format, ArrayFormat>(
   }
 }
 
+export function describeflattenedArrayChunk<Format, ArrayFormat>(
+  name: FilterKeys<Format, Array<any>>,
+  format: ChunkDescriptor<ArrayFormat>,
+  length: 'short' | 'int',
+  debug?: boolean
+): SubDescriptorChunk<Format, ArrayChunkDesc<ArrayFormat>, ArrayFormat[]> {
+  return {
+    type: 'sub_descriptor',
+    name,
+    debug: debug || false,
+    subDescriptor: [
+      length === 'int' ? DescribeNumber.int('arrayLength') : DescribeNumber.short('arrayLength'),
+      {
+        type: 'array',
+        name: 'array',
+        arrayFormat: [format],
+        amount: {
+          valueFrom: 'arrayLength',
+          transform: convertBuffer.toNumber,
+        },
+      },
+    ],
+    transform: arrayDef => arrayDef.array.map(obj => obj[format.name]) as any,
+  }
+}
+
 interface ArrayFromFixedLengthBufferSubFormat<T> {
   bufferLength: number
   array: Array<T>
@@ -103,4 +129,5 @@ export const DescribeArray = {
   variable: describeVariableArray,
   chunk: describeArraySubChunk,
   fromFixedLength: describeFixedLengthBufferUnknownAmountArray,
+  flattenedChunk: describeflattenedArrayChunk,
 }
