@@ -25,17 +25,21 @@ var buf3 = Buffer.from([
   0, 5, 100, 100, 100, 100, 100,
 ])
 
+
+
+export interface MyObject {
+  alias: string
+}
+
 export interface ConsoleCommandsListMessage {
-  aliases: Array<string>
-  aliases2: Array<string>
-  aliases3: string
+  aliases: Array<MyObject>
   args: Array<string>
   descriptions: Array<string>
 }
 
 export const ConsoleCommandsListMessageDescriptor: BufferDescriptor<ConsoleCommandsListMessage> = [
   Describe.header,
-  Describe.array.chunk('aliases', [Describe.string.chunk('aliases')], 'short'),
+  Describe.array.chunk('aliases', [Describe.string.chunk('aliqas')], 'short'),
   Describe.array.chunk('args', [Describe.string.chunk('args')], 'short'),
   Describe.array.chunk('descriptions', [Describe.string.chunk('descriptions')], 'short'),
 ]

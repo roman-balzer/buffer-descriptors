@@ -1,10 +1,9 @@
-
 # Buffer Descriptors
 
-This library provides ways to describe the format of a buffers. 
-These descriptors can be quite easy like describing number or strings with fixed or 
-variable lengths, but also provides the possibility to describe quite complex ones, 
-like arrays, subformats or stopConditions and lookups. 
+This library provides ways to describe the format of a buffers.
+These descriptors can be quite easy like describing number or strings with fixed or
+variable lengths, but also provides the possibility to describe quite complex ones,
+like arrays, subformats or stopConditions and lookups.
 The created descriptor can then be used to parse the buffers according to the descriptor.
 
 ## Installation
@@ -12,7 +11,7 @@ The created descriptor can then be used to parse the buffers according to the de
 ```bash
   npm install buffer-descriptors
 ```
-    
+
 ## Usage/Examples
 
 ```typescript
@@ -32,43 +31,44 @@ export interface ChatMessage extends SerializedMessage {
 
 export const ChatDescriptor: BufferDescriptor<ChatMessage> = [
   Describe.header,
-  Describe.number.char('channel'), 
-  Describe.string.subFormat('msg'),
+  Describe.number.char('channel'),
+  Describe.string.chunk('msg'),
   Describe.number.int('timestamp'),
-  Describe.string.subFormat('fingerprint'),
+  Describe.string.chunk('fingerprint'),
   Describe.number.double('senderId'),
-  Describe.string.subFormat('senderName'),
-  Describe.string.subFormat('prefix'),
+  Describe.string.chunk('senderName'),
+  Describe.string.chunk('prefix'),
   Describe.number.int('senderAccountId'),
 ]
 
 parseBuffer(myBuffer, ChatDescriptor)
-
 ```
 
-
 ## Documentation
+
 ### Predefined Descriptors
-* Number
-    * number.char
-    * number.short
-    * number.int
-    * number.double
-    * number.customLength
-* String
-    * string.fixed
-    * string.variable
-    * string.chunk - shortcut for length and string
-* Array
-    * array.fixed
-    * array.variable
-    * array.chunk  - shortcut for length and array
-    * array.fromFixedLength - if needing actual length instead of amount
-* boolean
-* unknown
-* unknownBuffer
-* header - `{  msgId: number, lengthBytes: number, contentLength: number }`
-* withCondition - wrapper to add conditions
+
+- Number
+  - number.char
+  - number.short
+  - number.int
+  - number.double
+  - number.customLength
+- String
+  - string.fixed
+  - string.variable
+  - string.chunk - shortcut for length and string
+- Array
+  - array.fixed
+  - array.variable
+  - array.chunk - shortcut for length and array
+  - array.fromFixedLength - if needing actual length instead of amount
+  - array.flattenedChunk
+- boolean
+- unknown
+- unknownBuffer
+- header - `{ msgId: number, lengthBytes: number, contentLength: number }`
+- withCondition - wrapper to add conditions
 
 ### Write own descriptors
 
@@ -76,12 +76,12 @@ See `src/descriptors-types.ts` for docs on the different types of descriptors. U
 to write your own descriptors. Or check `src/descriptors/*` for the predefined descriptors, to see
 how these are written.
 
-
 #### Example
+
 ```typescript
 interface BufferWithString {
-    stringLength: number
-    myString: string
+  stringLength: number
+  myString: string
 }
 
 const StringLengthChunk: LengthChunk<BufferWithString, number> = {
@@ -96,14 +96,14 @@ const StringChunk: LengthChunk<BufferWithString, string> = {
   name: 'myString',
   transform: toText,
   length: {
-    valueFrom: "stringLength",
+    valueFrom: 'stringLength',
     transform: toNumber,
   },
 }
 
 const dsc: BufferDescriptor<BufferWithString> = [StringLengthChunk, StringChunk]
-
 ```
+
 ## Optimizations
 
-Feel free to open an issue, if you feel something is missing. 
+Feel free to open an issue, if you feel something is missing.
