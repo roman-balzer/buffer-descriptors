@@ -1,5 +1,11 @@
 import * as convertBuffer from '../converter'
-import { SubDescriptorChunk, LengthChunk, ChunkDescriptor, ConditionField } from '../descriptor-types'
+import {
+  SubDescriptorChunk,
+  LengthChunk,
+  ChunkDescriptor,
+  ConditionField,
+  BufferDescriptor,
+} from '../descriptor-types'
 import { DescribeNumber } from './NumberDescriptor'
 import { DescribeString } from './StringDescriptor'
 import { DescribeArray } from './ArrayDescriptor'
@@ -73,6 +79,19 @@ export function DescribeUnknownBufferFormat<Format>(
   }
 }
 
+export function DescribeSubChunk<Format, Sub>(
+  name: FilterKeys<Format, Buffer>,
+  subDesc: BufferDescriptor<Sub>,
+  debug?: boolean
+): SubDescriptorChunk<Format, Sub, Buffer> {
+  return {
+    type: 'sub_descriptor',
+    name,
+    debug: debug || false,
+    subDescriptor: subDesc,
+  }
+}
+
 export const withCondition = <T>(descriptor: ChunkDescriptor<T>, condition: ConditionField<T>) => ({
   ...descriptor,
   condition,
@@ -82,6 +101,7 @@ export const Describe = {
   header: DescribeSerializedMessageHeader,
   number: DescribeNumber,
   string: DescribeString,
+  chunk: DescribeSubChunk,
   boolean: DescribeBooleanFormat,
   array: DescribeArray,
   unknown: DescribeUnknownFormat,
