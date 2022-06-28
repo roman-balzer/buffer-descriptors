@@ -23,7 +23,7 @@ export function parseBuffer<T>(buffer: Buffer, format: BufferDescriptor<T>): [T,
   try {
     format.forEach(dsc => {
       if (dsc.debug) {
-        console.log('# --------- DEBUG START ---------')
+        console.log('# --------- DEBUG START aoe ---------')
         console.log('Debugging for entry', dsc)
         console.log(`Current position: ${currentPos} of ${buffer.length}`)
         // console.log('Current displayValues', transformedValues)
@@ -73,6 +73,13 @@ export function parseBuffer<T>(buffer: Buffer, format: BufferDescriptor<T>): [T,
           return
         }
         case 'sub_descriptor': {
+          if (dsc.debug) {
+            console.log('\t# --------- sub_descriptor START ---------')
+            console.log('\tbuffer', buffer)
+            console.log('\buffer.length', buffer.length)
+            console.log('\bcurrentPos', currentPos)
+            console.log('\t# --------- sub_descriptor END ----------')
+          }
           const restBuffer = buffer.slice(currentPos, buffer.length)
           const [innerTransformedValues, bufferTail, endPos] = parseBuffer(restBuffer, dsc.subDescriptor)
           prevChunksTransformed[dsc.name] = dsc.transform
@@ -105,13 +112,19 @@ export function parseBuffer<T>(buffer: Buffer, format: BufferDescriptor<T>): [T,
         case 'stop_condition': {
           let bufferLength = 1
           let takeBuffer = buffer.slice(currentPos, currentPos + bufferLength)
+          console.log(`🚀TCL ~ file: functions.ts ~ line 115 ~ takeBuffer`, takeBuffer)
           while (dsc.stopCondition(takeBuffer) === false) {
             bufferLength++
             takeBuffer = buffer.slice(currentPos, currentPos + bufferLength)
+            console.log(`🚀TCL ~ file: functions.ts ~ line 115 ~ takeBuffer`, takeBuffer)
           }
           prevChunksRaw[dsc.name] = takeBuffer
           currentPos += bufferLength
           prevChunksTransformed[dsc.name] = dsc.transform(takeBuffer)
+          console.log(
+            `🚀TCL ~ file: functions.ts ~ line 123 ~ prevChunksTransformed[dsc.name] `,
+            prevChunksTransformed[dsc.name]
+          )
           break
         }
         default:
