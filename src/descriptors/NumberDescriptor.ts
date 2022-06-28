@@ -26,7 +26,7 @@ const UNSIGNED_SHORT_MAX_VALUE = 65536
 const INT_MAX_VALUE = 2147483647
 const UNSIGNED_INT_MAX_VALUE = 4294967296
 const decodeVarInt = (b: Buffer) => b.reduceRight((acc, curr) => 128 * (acc - 1) + curr, 1)
-export function describeVariableNumberBase<Format>(
+export function describeVariableNumber<Format>(
   name: FilterKeys<Format, number | undefined>,
   maxLength: 'short' | 'int',
   debug?: boolean
@@ -64,6 +64,5 @@ export const DescribeNumber = {
   char: <F>(name: FilterKeys<F, number | undefined>, debug?: boolean) =>
     describeNumberBase<F>(name, CHAR_LENGTH, debug),
   customLength: describeNumberBase,
-  varNumber: <F>(name: FilterKeys<F, number | undefined>, debug?: boolean) =>
-    describeVariableNumberBase<F>(name, 'short', debug),
+  varNumber: describeVariableNumber,
 }
