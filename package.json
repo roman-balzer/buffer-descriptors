@@ -1,6 +1,6 @@
 {
   "name": "buffer-descriptors",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Describe the format of a buffer an parse buffer into that format",
   "keywords": [
     "buffer",
